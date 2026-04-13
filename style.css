@@ -610,8 +610,6 @@ nav.scrolled {
     flex-wrap: wrap;
 }
 
-.stat-item {}
-
 .stat-number {
     font-family: var(--font-display);
     font-size: 1.9rem;
