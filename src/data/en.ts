@@ -40,6 +40,7 @@ export const en: SiteContent = {
     includesLabel: 'Includes',
     fromLabel: 'From',
     examplesLabel: 'Examples',
+    more: "Who it's for and what's included",
     cards: [
       {
         id: 'web',

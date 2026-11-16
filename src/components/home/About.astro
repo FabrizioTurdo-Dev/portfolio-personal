@@ -13,8 +13,8 @@ const t = getContent(locale);
 
 <section class="section" id="sobre-mi" aria-labelledby="sobre-title">
   <div class="container about-grid">
-    <div class="about-photo reveal">
-      <Image src={photo} alt={t.about.photoAlt} width={420} widths={[320, 420, 640]} sizes="(min-width: 900px) 320px, 60vw" loading="lazy" />
+    <div class="about-photo reveal only-desktop">
+      <Image src={photo} alt={t.about.photoAlt} width={300} widths={[300, 600]} sizes="(min-width: 900px) 260px, 0px" loading="lazy" />
     </div>
     <div class="about-copy">
       <p class="eyebrow">06 · {t.nav.about}</p>
@@ -33,39 +33,47 @@ const t = getContent(locale);
     align-items: start;
   }
   .about-photo {
-    width: min(100%, 320px);
-    border-radius: 20px;
+    width: min(100%, 260px);
+    border-radius: 16px;
     overflow: hidden;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line-strong);
     box-shadow: var(--shadow);
     aspect-ratio: 4 / 5;
-    background: var(--paper-2);
+    background: var(--surface);
   }
   .about-photo :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    filter: saturate(0.92);
   }
   .about-text {
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
     display: grid;
-    gap: 1rem;
-    max-width: 44rem;
+    gap: 0.9rem;
+    max-width: 42rem;
     color: var(--ink-2);
     text-wrap: pretty;
+    font-size: 0.98rem;
   }
   .about-text p:first-child {
     color: var(--ink);
-    font-size: 1.1rem;
+  }
+  @media (min-width: 760px) {
+    .about-text p:first-child {
+      font-family: var(--display);
+      font-size: 1.3rem;
+      line-height: 1.4;
+    }
   }
   @media (min-width: 900px) {
     .about-grid {
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: 260px 1fr;
       gap: 4rem;
     }
     .about-photo {
       position: sticky;
-      top: 100px;
+      top: 96px;
     }
   }
 </style>

@@ -8,23 +8,20 @@ import Icons from './Icons.astro';
 interface Props {
   item: CaseStudy;
   locale: Locale;
-  featured?: boolean;
 }
-const { item, locale, featured = false } = Astro.props;
+const { item, locale } = Astro.props;
 const t = getContent(locale);
 const cover = caseImage(item.slug, item.cover);
 const href = casePath(locale, item.slug);
 ---
 
-<article class:list={['case-card reveal', { featured }]}>
-  <a class="case-cover" href={href} aria-label={item.name}>
+<article class="case-card reveal">
+  <a class="case-cover" href={href} aria-label={item.name} tabindex="-1">
     {
       cover ? (
-        <Image src={cover} alt={`${item.name}: ${item.oneLiner}`} widths={[480, 800, 1200]} sizes={featured ? '(min-width: 900px) 60vw, 100vw' : '(min-width: 900px) 33vw, 100vw'} loading="lazy" />
+        <Image src={cover} alt="" widths={[320, 640, 960]} sizes="(min-width: 1000px) 33vw, (min-width: 760px) 50vw, 120px" loading="lazy" />
       ) : (
-        <div class="case-placeholder" aria-hidden="true">
-          <span>{item.name}</span>
-        </div>
+        <div class="case-placeholder" aria-hidden="true">{item.name}</div>
       )
     }
   </a>
@@ -38,23 +35,24 @@ const href = casePath(locale, item.slug);
 
 <style>
   .case-card {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
   }
   .case-cover {
     display: block;
-    border-radius: var(--radius);
+    border-radius: 10px;
     overflow: hidden;
     border: 1px solid var(--line);
-    background: var(--paper-2);
+    background: var(--surface);
     aspect-ratio: 16 / 10;
     box-shadow: var(--shadow);
-    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    transition: transform 0.35s var(--ease), border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
   }
-  .case-cover:hover {
+  .case-card:hover .case-cover {
     transform: translateY(-3px);
-    box-shadow: 0 1px 2px rgb(23 21 15 / 0.05), 0 24px 40px -20px rgb(23 21 15 / 0.35);
+    border-color: rgb(232 179 90 / 0.5);
+    box-shadow: 0 0 36px -12px var(--glow), var(--shadow);
   }
   .case-cover :global(img) {
     width: 100%;
@@ -68,39 +66,41 @@ const href = casePath(locale, item.slug);
     display: grid;
     place-items: center;
     font-family: var(--display);
-    font-weight: 800;
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    letter-spacing: -0.03em;
-    color: var(--line-strong);
-    background: repeating-linear-gradient(135deg, var(--paper-2) 0 12px, var(--paper-3) 12px 13px);
+    font-style: italic;
+    color: var(--muted);
   }
   .case-kind {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.3rem;
+  }
+  .case-body h3 {
+    font-size: 1.3rem;
   }
   .case-body h3 a {
     text-decoration: none;
   }
   .case-body h3 a:hover {
-    color: var(--accent-ink);
+    color: var(--accent-2);
   }
   .case-line {
     color: var(--ink-2);
-    margin-top: 0.4rem;
+    margin-top: 0.35rem;
+    font-size: 0.95rem;
     text-wrap: pretty;
   }
   .case-link {
     display: inline-flex;
     align-items: center;
     gap: 0.4em;
-    margin-top: 0.75rem;
+    margin-top: 0.6rem;
     font-weight: 600;
+    font-size: 0.92rem;
     text-decoration: none;
-    color: var(--accent-ink);
+    color: var(--accent);
   }
   .case-link :global(svg) {
     width: 1em;
@@ -110,7 +110,25 @@ const href = casePath(locale, item.slug);
   .case-link:hover :global(svg) {
     transform: translateX(3px);
   }
-  .featured .case-cover {
-    aspect-ratio: 16 / 9;
+  /* Celular: fila compacta con miniatura */
+  @media (max-width: 759px) {
+    .case-card {
+      grid-template-columns: 112px 1fr;
+      gap: 0.9rem;
+      align-items: start;
+    }
+    .case-cover {
+      aspect-ratio: 4 / 3;
+      border-radius: 8px;
+    }
+    .case-body h3 {
+      font-size: 1.12rem;
+    }
+    .case-line {
+      display: none;
+    }
+    .case-link {
+      margin-top: 0.3rem;
+    }
   }
 </style>

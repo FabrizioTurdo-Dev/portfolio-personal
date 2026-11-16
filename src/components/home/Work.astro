@@ -8,7 +8,6 @@ interface Props {
 }
 const { locale } = Astro.props;
 const t = getContent(locale);
-const cases = t.cases;
 ---
 
 <section class="section" id="trabajos" aria-labelledby="trabajos-title">
@@ -19,7 +18,7 @@ const cases = t.cases;
       <p class="lede">{t.work.intro}</p>
     </div>
     <div class="work-grid">
-      {cases.map((c) => (
+      {t.cases.map((c) => (
         <CaseCard item={c} locale={locale} />
       ))}
     </div>
@@ -29,11 +28,18 @@ const cases = t.cases;
 <style>
   .work-grid {
     display: grid;
-    gap: 2.5rem 1.75rem;
+    gap: 1.25rem;
   }
-  @media (min-width: 680px) {
+  @media (max-width: 759px) {
+    .work-grid > :global(* + *) {
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+  }
+  @media (min-width: 760px) {
     .work-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 2.25rem 1.5rem;
     }
   }
   @media (min-width: 1000px) {

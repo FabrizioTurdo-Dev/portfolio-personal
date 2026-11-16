@@ -23,26 +23,27 @@ const t = getContent(locale);
             <span class="service-num">0{i + 1}</span>
             <h3>{c.name}</h3>
           </header>
-          <dl class="service-dl">
-            <dt>{t.services.whoLabel}</dt>
-            <dd>{c.who}</dd>
-            <dt>{t.services.solvesLabel}</dt>
-            <dd>{c.solves}</dd>
-            <dt>{t.services.includesLabel}</dt>
-            <dd>{c.includes}</dd>
-          </dl>
+          <p class="service-solves">{c.solves}</p>
+          <details class="service-more">
+            <summary>{t.services.more}</summary>
+            <dl class="service-dl">
+              <dt>{t.services.whoLabel}</dt>
+              <dd>{c.who}</dd>
+              <dt>{t.services.includesLabel}</dt>
+              <dd>{c.includes}</dd>
+            </dl>
+          </details>
           <footer class="service-foot">
             <p class="service-from">
               <span class="muted">{t.services.fromLabel}</span>
               <strong>{c.from}</strong>
             </p>
             <p class="service-examples">
-              <span class="muted">{t.services.examplesLabel}:</span>
               {c.examples.map((slug, j) => {
                 const cs = findCase(locale, slug);
                 return cs ? (
                   <>
-                    <a href={casePath(locale, slug)}>{cs.name}</a>{j < c.examples.length - 1 ? ', ' : ''}
+                    <a href={casePath(locale, slug)}>{cs.name}</a>{j < c.examples.length - 1 ? ' · ' : ''}
                   </>
                 ) : null;
               })}
@@ -58,13 +59,28 @@ const t = getContent(locale);
 <style>
   .services {
     display: grid;
-    gap: 1.25rem;
+    gap: 1rem;
   }
   .service {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    transition-delay: calc(var(--i) * 90ms);
+    gap: 1rem;
+    transition-delay: calc(var(--i) * 80ms);
+    position: relative;
+    overflow: hidden;
+  }
+  .service::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent 70%);
+    opacity: 0.6;
+    transition: opacity 0.3s;
+  }
+  .service:hover::before {
+    opacity: 1;
   }
   .service-head {
     display: flex;
@@ -72,25 +88,48 @@ const t = getContent(locale);
     gap: 0.75rem;
   }
   .service-num {
-    font-family: var(--display);
-    font-weight: 800;
+    font-family: var(--mono);
     color: var(--accent);
-    font-size: 0.95rem;
-    letter-spacing: 0.02em;
+    font-size: 0.8rem;
+  }
+  .service-solves {
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+  .service-more summary {
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+  .service-more summary::-webkit-details-marker {
+    display: none;
+  }
+  .service-more summary::after {
+    content: '+';
+    color: var(--accent);
+  }
+  .service-more[open] summary::after {
+    content: '−';
   }
   .service-dl {
-    margin: 0;
+    margin: 0.9rem 0 0;
     display: grid;
-    gap: 0.9rem;
-    font-size: 0.97rem;
+    gap: 0.75rem;
+    font-size: 0.94rem;
   }
   .service-dl dt {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.15rem;
   }
   .service-dl dd {
     margin: 0;
@@ -98,11 +137,11 @@ const t = getContent(locale);
   }
   .service-foot {
     margin-top: auto;
-    padding-top: 1.1rem;
-    border-top: 1px dashed var(--line-strong);
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
     display: grid;
-    gap: 0.5rem;
-    font-size: 0.95rem;
+    gap: 0.4rem;
+    font-size: 0.92rem;
   }
   .service-from {
     display: flex;
@@ -112,20 +151,39 @@ const t = getContent(locale);
   }
   .service-from strong {
     font-family: var(--display);
-    font-size: 1.15rem;
-    letter-spacing: -0.01em;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--accent-2);
+  }
+  .service-examples {
+    color: var(--muted);
+    font-size: 0.86rem;
   }
   .service-examples a {
-    color: var(--ink);
+    color: var(--ink-2);
   }
   .services-note {
-    margin-top: 1.5rem;
-    max-width: 52rem;
-    font-size: 0.95rem;
+    margin-top: 1.25rem;
+    max-width: 50rem;
+    font-size: 0.9rem;
   }
   @media (min-width: 860px) {
     .services {
       grid-template-columns: repeat(3, 1fr);
     }
+    .service-more summary {
+      display: none;
+    }
+    .service-dl {
+      margin-top: 0;
+    }
   }
 </style>
+
+<script>
+  // En escritorio los detalles van siempre abiertos; en celular, plegados.
+  const mq = matchMedia('(min-width: 860px)');
+  const sync = () => document.querySelectorAll<HTMLDetailsElement>('.service-more').forEach((d) => (d.open = mq.matches));
+  sync();
+  mq.addEventListener('change', sync);
+</script>

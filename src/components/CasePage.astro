@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import type { CaseStudy, Locale } from '../data/types';
 import { casePath, getContent, homePath, otherLocale } from '../data';
 import { caseImage } from './images';
-import { CONTACT, whatsappUrl } from '../data/config';
+import { whatsappUrl } from '../data/config';
 import { Image } from 'astro:assets';
 import CaseCard from './CaseCard.astro';
 import Icons from './Icons.astro';
@@ -48,7 +48,7 @@ const jsonLd = {
         {cover && (
           <a class="case-cover" href={item.links[0]?.url} target="_blank" rel="noopener" aria-label={item.links[0] ? `${t.caseUi.links}: ${item.links[0].label}` : item.name}>
             <span class="case-cover-bar" aria-hidden="true"><span></span><span></span><span></span></span>
-            <Image src={cover} alt={`${item.name}: ${item.oneLiner}`} widths={[640, 1000, 1400]} sizes="(min-width: 1160px) 1120px, 100vw" loading="eager" />
+            <Image src={cover} alt={`${item.name}: ${item.oneLiner}`} widths={[640, 1000, 1400]} sizes="(min-width: 1140px) 1100px, 100vw" loading="eager" />
           </a>
         )}
       </div>
@@ -72,6 +72,15 @@ const jsonLd = {
             {item.result.map((p) => <p>{p}</p>)}
           </section>
         )}
+        {item.testimonial && (
+          <section class="case-block">
+            <h2>{t.caseUi.testimonial}</h2>
+            <blockquote class="case-quote">
+              <p>“{item.testimonial.quote}”</p>
+              <footer>— {item.testimonial.author}</footer>
+            </blockquote>
+          </section>
+        )}
         {item.links.length > 0 && (
           <section class="case-block live">
             <h2>{t.caseUi.links}</h2>
@@ -80,15 +89,6 @@ const jsonLd = {
                 <a class:list={['btn', { 'btn--accent': i === 0 }]} href={l.url} target="_blank" rel="noopener">{l.label} <Icons name="external" /></a>
               ))}
             </div>
-          </section>
-        )}
-        {item.testimonial && (
-          <section class="case-block">
-            <h2>{t.caseUi.testimonial}</h2>
-            <blockquote class="case-quote">
-              <p>“{item.testimonial.quote}”</p>
-              <footer>— {item.testimonial.author}</footer>
-            </blockquote>
           </section>
         )}
       </div>
@@ -134,23 +134,41 @@ const jsonLd = {
 
 <style>
   .case-hero {
-    padding-block: clamp(2rem, 5vw, 4rem) clamp(2rem, 4vw, 3rem);
+    padding-block: clamp(1.75rem, 4vw, 3.5rem) clamp(2rem, 4vw, 3rem);
     border-bottom: 1px solid var(--line);
-    background: linear-gradient(180deg, var(--paper-2), var(--paper));
+    position: relative;
+    overflow: hidden;
+  }
+  .case-hero::before {
+    content: '';
+    position: absolute;
+    left: -10vw;
+    top: -20vw;
+    width: 50vw;
+    height: 50vw;
+    max-width: 700px;
+    max-height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(232 179 90 / 0.16), transparent 65%);
+    filter: blur(60px);
+    pointer-events: none;
+  }
+  .case-hero .container {
+    position: relative;
   }
   .case-hero h1 {
-    font-size: clamp(2rem, 4.5vw, 3.4rem);
-    max-width: 22ch;
+    font-size: clamp(1.9rem, 4vw, 3.1rem);
+    max-width: 24ch;
   }
   .back {
     display: inline-flex;
     align-items: center;
     gap: 0.4em;
     text-decoration: none;
-    font-size: 0.92rem;
-    font-weight: 600;
+    font-family: var(--mono);
+    font-size: 0.76rem;
     color: var(--muted);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
   }
   .back :global(svg) {
     width: 1em;
@@ -158,12 +176,12 @@ const jsonLd = {
     transform: rotate(180deg);
   }
   .back:hover {
-    color: var(--ink);
+    color: var(--accent-2);
   }
   .case-lede {
-    font-size: 1.2rem;
+    font-size: 1.12rem;
     color: var(--ink-2);
-    margin-top: 1.25rem;
+    margin-top: 1rem;
     max-width: 40rem;
     text-wrap: pretty;
   }
@@ -171,69 +189,32 @@ const jsonLd = {
     display: flex;
     flex-wrap: wrap;
     gap: 0.6rem;
-    margin-top: 1.75rem;
-  }
-  .case-grid {
-    display: grid;
-    gap: 2.5rem;
-    padding-block: clamp(2.5rem, 5vw, 4rem);
-    align-items: start;
-  }
-  .case-block + .case-block {
-    margin-top: 3rem;
-  }
-  .case-block h2 {
-    font-size: 1.45rem;
-    margin-bottom: 1rem;
-  }
-  .case-block p {
-    color: var(--ink-2);
-    max-width: 42rem;
-    text-wrap: pretty;
-  }
-  .built {
-    list-style: none;
-    display: grid;
-    gap: 0.75rem;
-  }
-  .built li {
-    position: relative;
-    padding-left: 1.5rem;
-    color: var(--ink-2);
-    max-width: 42rem;
-  }
-  .built li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.65em;
-    width: 0.75rem;
-    height: 2px;
-    background: var(--accent);
+    margin-top: 1.5rem;
   }
   .case-cover {
     display: block;
-    margin-top: 2rem;
+    margin-top: 1.75rem;
     border-radius: 12px;
     overflow: hidden;
-    border: 1px solid var(--line);
-    background: #fff;
-    box-shadow: var(--shadow);
-    transition: transform 0.4s var(--ease);
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+    box-shadow: 0 0 60px -20px var(--glow), var(--shadow);
+    transition: transform 0.4s var(--ease), border-color 0.4s var(--ease);
   }
   .case-cover:hover {
     transform: translateY(-2px);
+    border-color: rgb(232 179 90 / 0.5);
   }
   .case-cover-bar {
     display: flex;
     gap: 6px;
-    padding: 9px 12px;
-    background: var(--paper-2);
+    padding: 8px 12px;
+    background: var(--bg-2);
     border-bottom: 1px solid var(--line);
   }
   .case-cover-bar span {
-    width: 9px;
-    height: 9px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: var(--line-strong);
   }
@@ -245,36 +226,81 @@ const jsonLd = {
     object-fit: cover;
     object-position: top;
   }
-  .live .case-links {
-    margin-top: 0;
+  .case-grid {
+    display: grid;
+    gap: 2rem;
+    padding-block: clamp(2rem, 4.5vw, 3.5rem);
+    align-items: start;
+  }
+  .case-block + .case-block {
+    margin-top: 2.5rem;
+  }
+  .case-block h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.9rem;
+  }
+  .case-block p {
+    color: var(--ink-2);
+    max-width: 42rem;
+    text-wrap: pretty;
+    font-size: 0.98rem;
+  }
+  .built {
+    list-style: none;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .built li {
+    position: relative;
+    padding-left: 1.4rem;
+    color: var(--ink-2);
+    max-width: 42rem;
+    font-size: 0.98rem;
+  }
+  .built li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 0.7rem;
+    height: 1px;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--glow);
   }
   .result p {
     color: var(--ink);
-    font-size: 1.1rem;
+    font-family: var(--display);
+    font-size: 1.25rem;
+    line-height: 1.45;
+  }
+  .live .case-links {
+    margin-top: 0;
   }
   .case-quote {
     margin: 0;
-    padding: 1.25rem 1.5rem;
-    border-left: 3px solid var(--accent);
-    background: #fff;
+    padding: 1.1rem 1.3rem;
+    border-left: 2px solid var(--accent);
+    background: var(--surface);
     border-radius: 0 var(--radius) var(--radius) 0;
-    font-size: 1.05rem;
+    font-family: var(--display);
+    font-size: 1.1rem;
   }
   .case-quote footer {
-    margin-top: 0.75rem;
+    margin-top: 0.7rem;
+    font-family: var(--mono);
+    font-size: 0.74rem;
     color: var(--muted);
-    font-size: 0.9rem;
   }
   .meta {
     margin: 0;
     display: grid;
-    gap: 1.1rem;
-    font-size: 0.95rem;
+    gap: 1rem;
+    font-size: 0.94rem;
   }
   .meta dt {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--muted);
     margin-bottom: 0.2rem;
@@ -289,42 +315,53 @@ const jsonLd = {
     gap: 0.25rem;
   }
   .case-cta {
-    margin-top: 1.25rem;
+    margin-top: 1rem;
     display: grid;
-    gap: 1rem;
-    background: var(--paper-2);
-    box-shadow: none;
+    gap: 0.9rem;
+    background: linear-gradient(160deg, rgb(47 179 109 / 0.1), transparent 60%), var(--surface);
   }
   .case-cta h3 {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
   }
   .small-link {
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     color: var(--ink-2);
   }
   .more {
     border-top: 1px solid var(--line);
   }
   .more h2 {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
   .more-grid {
     display: grid;
-    gap: 2rem 1.75rem;
+    gap: 1.25rem;
   }
-  @media (min-width: 900px) {
-    .case-grid {
-      grid-template-columns: 1fr 300px;
-      gap: 4rem;
+  @media (max-width: 759px) {
+    .more-grid > :global(* + *) {
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
     }
-    .case-aside {
-      position: sticky;
-      top: 96px;
+    .case-links .btn {
+      width: 100%;
+    }
+    .case-aside .meta {
+      display: none;
     }
   }
   @media (min-width: 760px) {
     .more-grid {
       grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .case-grid {
+      grid-template-columns: 1fr 290px;
+      gap: 4rem;
+    }
+    .case-aside {
+      position: sticky;
+      top: 92px;
     }
   }
 </style>

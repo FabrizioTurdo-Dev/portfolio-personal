@@ -19,13 +19,15 @@ const t = getContent(locale);
     <ol class="steps">
       {t.process.steps.map((s, i) => (
         <li class="step reveal" style={`--i:${i}`}>
-          <span class="step-num" aria-hidden="true">{i + 1}</span>
-          <h3>{s.title}</h3>
-          <p>{s.text}</p>
+          <span class="step-num" aria-hidden="true">0{i + 1}</span>
+          <div>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </div>
         </li>
       ))}
     </ol>
-    <aside class="abroad card reveal" aria-labelledby="abroad-title">
+    <aside class="abroad reveal" aria-labelledby="abroad-title">
       <h3 id="abroad-title">{t.process.abroad.title}</h3>
       <dl class="abroad-dl">
         {t.process.abroad.items.map((it) => (
@@ -43,62 +45,68 @@ const t = getContent(locale);
   .steps {
     list-style: none;
     display: grid;
-    gap: 1.5rem;
-    counter-reset: step;
+    gap: 1.25rem;
   }
   .step {
-    position: relative;
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 0.5rem;
     padding-top: 1rem;
-    border-top: 2px solid var(--ink);
-    transition-delay: calc(var(--i) * 90ms);
+    border-top: 1px solid var(--line-strong);
+    transition-delay: calc(var(--i) * 80ms);
   }
   .step-num {
-    display: inline-block;
-    font-family: var(--display);
-    font-weight: 800;
-    font-size: 2.2rem;
-    line-height: 1;
+    font-family: var(--mono);
+    font-size: 0.8rem;
     color: var(--accent);
-    letter-spacing: -0.04em;
-    margin-bottom: 0.6rem;
+    padding-top: 0.35rem;
   }
   .step h3 {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
   }
   .step p {
     color: var(--ink-2);
-    font-size: 0.98rem;
+    font-size: 0.95rem;
   }
   .abroad {
-    margin-top: 3rem;
-    background: var(--paper-2);
-    box-shadow: none;
+    margin-top: 2.5rem;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    border-radius: var(--radius);
+    border: 1px solid rgb(111 211 193 / 0.25);
+    background: linear-gradient(135deg, rgb(111 211 193 / 0.08), transparent 60%), var(--surface);
   }
   .abroad h3 {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.1rem;
+    color: var(--teal);
+    font-style: italic;
+    font-weight: 400;
   }
   .abroad-dl {
     margin: 0;
     display: grid;
-    gap: 1.25rem;
+    gap: 1rem;
   }
   .abroad-dl dt {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent-ink);
-    margin-bottom: 0.25rem;
+    color: var(--muted);
+    margin-bottom: 0.2rem;
   }
   .abroad-dl dd {
     margin: 0;
     color: var(--ink-2);
-    font-size: 0.97rem;
+    font-size: 0.95rem;
   }
   @media (min-width: 760px) {
     .steps {
       grid-template-columns: repeat(4, 1fr);
-      gap: 1.75rem;
+      gap: 1.5rem;
+    }
+    .step {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
     }
     .abroad-dl {
       grid-template-columns: repeat(3, 1fr);

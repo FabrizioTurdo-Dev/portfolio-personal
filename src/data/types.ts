@@ -48,6 +48,8 @@ export interface SiteContent {
     includesLabel: string;
     fromLabel: string;
     examplesLabel: string;
+    /** Texto del plegado en celular */
+    more: string;
     footnote: string;
   };
   work: { title: string; intro: string; readCase: string; all: string };

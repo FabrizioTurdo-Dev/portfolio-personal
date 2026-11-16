@@ -40,6 +40,7 @@ export const es: SiteContent = {
     includesLabel: 'Incluye',
     fromLabel: 'Desde',
     examplesLabel: 'Ejemplos',
+    more: 'Para quién es y qué incluye',
     cards: [
       {
         id: 'web',
