@@ -4,7 +4,7 @@ import type { CaseStudy, Locale } from '../data/types';
 import { casePath, getContent, homePath, otherLocale } from '../data';
 import { caseImage } from './images';
 import { CONTACT, whatsappUrl } from '../data/config';
-import Shot from './Shot.astro';
+import { Image } from 'astro:assets';
 import CaseCard from './CaseCard.astro';
 import Icons from './Icons.astro';
 
@@ -16,7 +16,7 @@ const { locale, item } = Astro.props;
 const t = getContent(locale);
 const other = otherLocale(locale);
 const home = homePath(locale);
-const shots = item.shots.map((s) => ({ ...s, image: caseImage(item.slug, s.file) })).filter((s) => s.image);
+const cover = caseImage(item.slug, item.cover);
 const others = t.cases.filter((c) => c.slug !== item.slug).slice(0, 3);
 const title = `${item.title} · Fabrizio Turdo`;
 const ogImage = item.cover ? `/og/${item.slug}.png` : '/og.png';
@@ -40,10 +40,16 @@ const jsonLd = {
         <p class="case-lede">{item.oneLiner}</p>
         {item.links.length > 0 && (
           <div class="case-links">
-            {item.links.map((l) => (
-              <a class="btn" href={l.url} target="_blank" rel="noopener">{l.label} <Icons name="external" /></a>
+            {item.links.map((l, i) => (
+              <a class:list={['btn', { 'btn--accent': i === 0 }]} href={l.url} target="_blank" rel="noopener">{l.label} <Icons name="external" /></a>
             ))}
           </div>
+        )}
+        {cover && (
+          <a class="case-cover" href={item.links[0]?.url} target="_blank" rel="noopener" aria-label={item.links[0] ? `${t.caseUi.links}: ${item.links[0].label}` : item.name}>
+            <span class="case-cover-bar" aria-hidden="true"><span></span><span></span><span></span></span>
+            <Image src={cover} alt={`${item.name}: ${item.oneLiner}`} widths={[640, 1000, 1400]} sizes="(min-width: 1160px) 1120px, 100vw" loading="eager" />
+          </a>
         )}
       </div>
     </header>
@@ -60,18 +66,20 @@ const jsonLd = {
             {item.built.map((b) => <li>{b}</li>)}
           </ul>
         </section>
-        {shots.length > 0 && (
-          <section class="case-block">
-            <h2>{t.caseUi.shots}</h2>
-            <div class="shots">
-              {shots.map((s) => <Shot image={s.image!} alt={s.alt} kind={s.kind} />)}
-            </div>
-          </section>
-        )}
         {item.result.length > 0 && (
           <section class="case-block result">
             <h2>{t.caseUi.result}</h2>
             {item.result.map((p) => <p>{p}</p>)}
+          </section>
+        )}
+        {item.links.length > 0 && (
+          <section class="case-block live">
+            <h2>{t.caseUi.links}</h2>
+            <div class="case-links">
+              {item.links.map((l, i) => (
+                <a class:list={['btn', { 'btn--accent': i === 0 }]} href={l.url} target="_blank" rel="noopener">{l.label} <Icons name="external" /></a>
+              ))}
+            </div>
           </section>
         )}
         {item.testimonial && (
@@ -203,9 +211,42 @@ const jsonLd = {
     height: 2px;
     background: var(--accent);
   }
-  .shots {
-    display: grid;
-    gap: 2rem;
+  .case-cover {
+    display: block;
+    margin-top: 2rem;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: #fff;
+    box-shadow: var(--shadow);
+    transition: transform 0.4s var(--ease);
+  }
+  .case-cover:hover {
+    transform: translateY(-2px);
+  }
+  .case-cover-bar {
+    display: flex;
+    gap: 6px;
+    padding: 9px 12px;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .case-cover-bar span {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+  .case-cover :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+  }
+  .live .case-links {
+    margin-top: 0;
   }
   .result p {
     color: var(--ink);
@@ -279,12 +320,6 @@ const jsonLd = {
     .case-aside {
       position: sticky;
       top: 96px;
-    }
-    .shots {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .shots :global(.shot--desktop) {
-      grid-column: 1 / -1;
     }
   }
   @media (min-width: 760px) {

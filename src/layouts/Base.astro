@@ -80,7 +80,15 @@ const ogLocale = locale === 'es' ? 'es_AR' : 'en_US';
       <slot />
     </main>
     <Footer locale={locale} />
+    <script is:inline>
+      // Cada página nueva arranca arriba de todo (salvo que el link traiga #ancla).
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      if (!location.hash) window.scrollTo(0, 0);
+    </script>
     <script>
+      if (!location.hash) {
+        window.addEventListener('load', () => window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }));
+      }
       const targets = document.querySelectorAll('.reveal');
       if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
         targets.forEach((el) => el.classList.add('is-visible'));
