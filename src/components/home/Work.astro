@@ -1,0 +1,44 @@
+---
+import type { Locale } from '../../data/types';
+import { getContent } from '../../data';
+import CaseCard from '../CaseCard.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = getContent(locale);
+const cases = t.cases;
+---
+
+<section class="section" id="trabajos" aria-labelledby="trabajos-title">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">02 · {t.nav.work}</p>
+      <h2 id="trabajos-title">{t.work.title}</h2>
+      <p class="lede">{t.work.intro}</p>
+    </div>
+    <div class="work-grid">
+      {cases.map((c) => (
+        <CaseCard item={c} locale={locale} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .work-grid {
+    display: grid;
+    gap: 2.5rem 1.75rem;
+  }
+  @media (min-width: 680px) {
+    .work-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .work-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

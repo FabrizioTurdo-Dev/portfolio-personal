@@ -1,0 +1,295 @@
+---
+import Base from '../layouts/Base.astro';
+import type { CaseStudy, Locale } from '../data/types';
+import { casePath, getContent, homePath, otherLocale } from '../data';
+import { caseImage } from './images';
+import { CONTACT, whatsappUrl } from '../data/config';
+import Shot from './Shot.astro';
+import CaseCard from './CaseCard.astro';
+import Icons from './Icons.astro';
+
+interface Props {
+  locale: Locale;
+  item: CaseStudy;
+}
+const { locale, item } = Astro.props;
+const t = getContent(locale);
+const other = otherLocale(locale);
+const home = homePath(locale);
+const shots = item.shots.map((s) => ({ ...s, image: caseImage(item.slug, s.file) })).filter((s) => s.image);
+const others = t.cases.filter((c) => c.slug !== item.slug).slice(0, 3);
+const title = `${item.title} · Fabrizio Turdo`;
+const ogImage = item.cover ? `/og/${item.slug}.png` : '/og.png';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: item.title,
+  description: item.oneLiner,
+  author: { '@type': 'Person', name: 'Fabrizio Turdo' },
+  url: `https://fabrizioturdo.com${casePath(locale, item.slug)}`,
+};
+---
+
+<Base locale={locale} title={title} description={item.oneLiner} path={casePath(locale, item.slug)} altPath={casePath(other, item.slug)} ogType="article" ogImage={ogImage} jsonLd={jsonLd}>
+  <article class="case">
+    <header class="case-hero">
+      <div class="container">
+        <a class="back" href={`${home}#trabajos`}><Icons name="arrow" /> {t.caseUi.back}</a>
+        <p class="eyebrow">{item.kind}</p>
+        <h1>{item.title}</h1>
+        <p class="case-lede">{item.oneLiner}</p>
+        {item.links.length > 0 && (
+          <div class="case-links">
+            {item.links.map((l) => (
+              <a class="btn" href={l.url} target="_blank" rel="noopener">{l.label} <Icons name="external" /></a>
+            ))}
+          </div>
+        )}
+      </div>
+    </header>
+
+    <div class="container case-grid">
+      <div class="case-main">
+        <section class="case-block">
+          <h2>{t.caseUi.problem}</h2>
+          {item.problem.map((p) => <p>{p}</p>)}
+        </section>
+        <section class="case-block">
+          <h2>{t.caseUi.built}</h2>
+          <ul class="built">
+            {item.built.map((b) => <li>{b}</li>)}
+          </ul>
+        </section>
+        {shots.length > 0 && (
+          <section class="case-block">
+            <h2>{t.caseUi.shots}</h2>
+            <div class="shots">
+              {shots.map((s) => <Shot image={s.image!} alt={s.alt} kind={s.kind} />)}
+            </div>
+          </section>
+        )}
+        {item.result.length > 0 && (
+          <section class="case-block result">
+            <h2>{t.caseUi.result}</h2>
+            {item.result.map((p) => <p>{p}</p>)}
+          </section>
+        )}
+        {item.testimonial && (
+          <section class="case-block">
+            <h2>{t.caseUi.testimonial}</h2>
+            <blockquote class="case-quote">
+              <p>“{item.testimonial.quote}”</p>
+              <footer>— {item.testimonial.author}</footer>
+            </blockquote>
+          </section>
+        )}
+      </div>
+      <aside class="case-aside">
+        <dl class="meta card">
+          <div>
+            <dt>{t.caseUi.stack}</dt>
+            <dd>{item.stack}</dd>
+          </div>
+          <div>
+            <dt>{t.caseUi.timeline}</dt>
+            <dd>{item.timeline}</dd>
+          </div>
+          {item.links.length > 0 && (
+            <div>
+              <dt>{t.caseUi.links}</dt>
+              <dd>
+                <ul class="meta-links">
+                  {item.links.map((l) => (
+                    <li><a href={l.url} target="_blank" rel="noopener">{l.label}</a></li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          )}
+        </dl>
+        <div class="case-cta card">
+          <h3>{t.caseUi.cta}</h3>
+          <a class="btn btn--wa" href={whatsappUrl(t.contact.whatsapp.message)} target="_blank" rel="noopener"><Icons name="whatsapp" /> {t.caseUi.ctaButton}</a>
+          <a class="small-link" href={`${home}#contacto`}>{t.nav.contact} →</a>
+        </div>
+      </aside>
+    </div>
+
+    <section class="section container more">
+      <h2>{t.caseUi.more}</h2>
+      <div class="more-grid">
+        {others.map((c) => <CaseCard item={c} locale={locale} />)}
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .case-hero {
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--paper-2), var(--paper));
+  }
+  .case-hero h1 {
+    font-size: clamp(2rem, 4.5vw, 3.4rem);
+    max-width: 22ch;
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .back :global(svg) {
+    width: 1em;
+    height: 1em;
+    transform: rotate(180deg);
+  }
+  .back:hover {
+    color: var(--ink);
+  }
+  .case-lede {
+    font-size: 1.2rem;
+    color: var(--ink-2);
+    margin-top: 1.25rem;
+    max-width: 40rem;
+    text-wrap: pretty;
+  }
+  .case-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.75rem;
+  }
+  .case-grid {
+    display: grid;
+    gap: 2.5rem;
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    align-items: start;
+  }
+  .case-block + .case-block {
+    margin-top: 3rem;
+  }
+  .case-block h2 {
+    font-size: 1.45rem;
+    margin-bottom: 1rem;
+  }
+  .case-block p {
+    color: var(--ink-2);
+    max-width: 42rem;
+    text-wrap: pretty;
+  }
+  .built {
+    list-style: none;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .built li {
+    position: relative;
+    padding-left: 1.5rem;
+    color: var(--ink-2);
+    max-width: 42rem;
+  }
+  .built li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 0.75rem;
+    height: 2px;
+    background: var(--accent);
+  }
+  .shots {
+    display: grid;
+    gap: 2rem;
+  }
+  .result p {
+    color: var(--ink);
+    font-size: 1.1rem;
+  }
+  .case-quote {
+    margin: 0;
+    padding: 1.25rem 1.5rem;
+    border-left: 3px solid var(--accent);
+    background: #fff;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 1.05rem;
+  }
+  .case-quote footer {
+    margin-top: 0.75rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .meta {
+    margin: 0;
+    display: grid;
+    gap: 1.1rem;
+    font-size: 0.95rem;
+  }
+  .meta dt {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.2rem;
+  }
+  .meta dd {
+    margin: 0;
+    color: var(--ink);
+  }
+  .meta-links {
+    list-style: none;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .case-cta {
+    margin-top: 1.25rem;
+    display: grid;
+    gap: 1rem;
+    background: var(--paper-2);
+    box-shadow: none;
+  }
+  .case-cta h3 {
+    font-size: 1.2rem;
+  }
+  .small-link {
+    font-size: 0.92rem;
+    color: var(--ink-2);
+  }
+  .more {
+    border-top: 1px solid var(--line);
+  }
+  .more h2 {
+    margin-bottom: 2rem;
+  }
+  .more-grid {
+    display: grid;
+    gap: 2rem 1.75rem;
+  }
+  @media (min-width: 900px) {
+    .case-grid {
+      grid-template-columns: 1fr 300px;
+      gap: 4rem;
+    }
+    .case-aside {
+      position: sticky;
+      top: 96px;
+    }
+    .shots {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .shots :global(.shot--desktop) {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 760px) {
+    .more-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

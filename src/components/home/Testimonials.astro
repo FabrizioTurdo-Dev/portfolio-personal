@@ -1,0 +1,53 @@
+---
+import type { Locale } from '../../data/types';
+import { getContent } from '../../data';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = getContent(locale);
+const items = t.testimonials.items;
+---
+
+{
+  items.length > 0 && (
+    <section class="section" id="testimonios" aria-labelledby="testimonios-title">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">07</p>
+          <h2 id="testimonios-title">{t.testimonials.title}</h2>
+        </div>
+        <div class="quotes">
+          {items.map((q) => (
+            <blockquote class="quote card reveal">
+              <p>“{q.quote}”</p>
+              <footer>— {q.author}</footer>
+            </blockquote>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .quotes {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .quote {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+  .quote footer {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  @media (min-width: 760px) {
+    .quotes {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+  }
+</style>

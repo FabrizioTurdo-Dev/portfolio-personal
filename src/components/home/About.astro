@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+import type { Locale } from '../../data/types';
+import { getContent } from '../../data';
+import photo from '../../assets/fabrizio.png';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = getContent(locale);
+---
+
+<section class="section" id="sobre-mi" aria-labelledby="sobre-title">
+  <div class="container about-grid">
+    <div class="about-photo reveal">
+      <Image src={photo} alt={t.about.photoAlt} width={420} widths={[320, 420, 640]} sizes="(min-width: 900px) 320px, 60vw" loading="lazy" />
+    </div>
+    <div class="about-copy">
+      <p class="eyebrow">06 · {t.nav.about}</p>
+      <h2 id="sobre-title">{t.about.title}</h2>
+      <div class="about-text">
+        {t.about.paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-grid {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+  .about-photo {
+    width: min(100%, 320px);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    aspect-ratio: 4 / 5;
+    background: var(--paper-2);
+  }
+  .about-photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .about-text {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 1rem;
+    max-width: 44rem;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+  .about-text p:first-child {
+    color: var(--ink);
+    font-size: 1.1rem;
+  }
+  @media (min-width: 900px) {
+    .about-grid {
+      grid-template-columns: 320px 1fr;
+      gap: 4rem;
+    }
+    .about-photo {
+      position: sticky;
+      top: 100px;
+    }
+  }
+</style>

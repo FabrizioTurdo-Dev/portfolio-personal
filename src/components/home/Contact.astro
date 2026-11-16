@@ -1,0 +1,174 @@
+---
+import type { Locale } from '../../data/types';
+import { getContent } from '../../data';
+import { CONTACT, whatsappUrl } from '../../data/config';
+import Icons from '../Icons.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = getContent(locale);
+const calendarHref = CONTACT.calendarUrl || whatsappUrl(t.contact.calendar.fallbackMessage);
+---
+
+<section class="section" id="contacto" aria-labelledby="contacto-title">
+  <div class="container contact-grid">
+    <div class="contact-copy">
+      <p class="eyebrow">09 · {t.nav.contact}</p>
+      <h2 id="contacto-title">{t.contact.title}</h2>
+      <p class="lede">{t.contact.intro}</p>
+      <div class="contact-alt">
+        <a class="btn btn--wa" href={whatsappUrl(t.contact.whatsapp.message)} target="_blank" rel="noopener">
+          <Icons name="whatsapp" />
+          {t.contact.whatsapp.label}
+        </a>
+        <a class="btn btn--ghost" href={calendarHref} target="_blank" rel="noopener">
+          <Icons name="calendar" />
+          {t.contact.calendar.label}
+        </a>
+        <p class="contact-email">
+          <span class="muted">{t.contact.emailLabel}:</span>
+          <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        </p>
+      </div>
+    </div>
+
+    <form class="contact-form card" id="contact-form" action={CONTACT.formEndpoint} method="POST" novalidate data-sent={t.contact.form.sent} data-error={t.contact.form.error} data-sending={t.contact.form.sending}>
+      <input type="hidden" name="_subject" value={`Consulta desde fabrizioturdo.com (${locale})`} />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="text" name="_honey" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <div class="field">
+        <label for="f-name">{t.contact.form.name}</label>
+        <input id="f-name" name="name" type="text" required autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for="f-email">{t.contact.form.email}</label>
+        <input id="f-email" name="email" type="email" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="f-message">{t.contact.form.message}</label>
+        <textarea id="f-message" name="message" rows="5" required placeholder={t.contact.form.messagePlaceholder}></textarea>
+      </div>
+      <button class="btn btn--accent" type="submit">
+        <Icons name="mail" />
+        <span data-label>{t.contact.form.send}</span>
+      </button>
+      <p class="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .contact-grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .contact-alt {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+  .contact-email {
+    margin-top: 0.5rem;
+    font-size: 0.97rem;
+  }
+  .contact-email a {
+    margin-left: 0.3em;
+  }
+  .contact-form {
+    display: grid;
+    gap: 1.1rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .field label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .field input,
+  .field textarea {
+    font: inherit;
+    font-size: 1rem;
+    padding: 0.75rem 0.9rem;
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+    color: var(--ink);
+    width: 100%;
+    transition: border-color 0.2s;
+  }
+  .field input:focus,
+  .field textarea:focus {
+    border-color: var(--ink);
+    outline: none;
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 7rem;
+  }
+  .form-status:empty {
+    display: none;
+  }
+  .form-status {
+    font-size: 0.95rem;
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius-sm);
+    background: var(--wa-soft);
+    color: #145c3a;
+  }
+  .form-status.is-error {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+  }
+  @media (min-width: 900px) {
+    .contact-grid {
+      grid-template-columns: 1fr 1.1fr;
+      gap: 4rem;
+    }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  if (form) {
+    const status = form.querySelector('.form-status') as HTMLElement;
+    const button = form.querySelector('button[type=submit]') as HTMLButtonElement;
+    const label = button.querySelector('[data-label]') as HTMLElement;
+    const original = label.textContent;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      status.textContent = '';
+      status.classList.remove('is-error');
+      button.disabled = true;
+      label.textContent = form.dataset.sending || '…';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(form),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        status.textContent = form.dataset.sent || 'OK';
+        form.reset();
+        if (typeof (window as any).gtag === 'function') (window as any).gtag('event', 'contact_form');
+      } catch {
+        status.textContent = form.dataset.error || 'Error';
+        status.classList.add('is-error');
+      } finally {
+        button.disabled = false;
+        label.textContent = original;
+      }
+    });
+  }
+</script>

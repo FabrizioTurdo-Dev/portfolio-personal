@@ -1,0 +1,131 @@
+---
+import type { Locale } from '../../data/types';
+import { casePath, findCase, getContent } from '../../data';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = getContent(locale);
+---
+
+<section class="section" id="servicios" aria-labelledby="servicios-title">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">01 · {t.nav.services}</p>
+      <h2 id="servicios-title">{t.services.title}</h2>
+      <p class="lede">{t.services.intro}</p>
+    </div>
+    <div class="services">
+      {t.services.cards.map((c, i) => (
+        <article class="service card reveal" style={`--i:${i}`}>
+          <header class="service-head">
+            <span class="service-num">0{i + 1}</span>
+            <h3>{c.name}</h3>
+          </header>
+          <dl class="service-dl">
+            <dt>{t.services.whoLabel}</dt>
+            <dd>{c.who}</dd>
+            <dt>{t.services.solvesLabel}</dt>
+            <dd>{c.solves}</dd>
+            <dt>{t.services.includesLabel}</dt>
+            <dd>{c.includes}</dd>
+          </dl>
+          <footer class="service-foot">
+            <p class="service-from">
+              <span class="muted">{t.services.fromLabel}</span>
+              <strong>{c.from}</strong>
+            </p>
+            <p class="service-examples">
+              <span class="muted">{t.services.examplesLabel}:</span>
+              {c.examples.map((slug, j) => {
+                const cs = findCase(locale, slug);
+                return cs ? (
+                  <>
+                    <a href={casePath(locale, slug)}>{cs.name}</a>{j < c.examples.length - 1 ? ', ' : ''}
+                  </>
+                ) : null;
+              })}
+            </p>
+          </footer>
+        </article>
+      ))}
+    </div>
+    <p class="services-note muted">{t.services.footnote}</p>
+  </div>
+</section>
+
+<style>
+  .services {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .service {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition-delay: calc(var(--i) * 90ms);
+  }
+  .service-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .service-num {
+    font-family: var(--display);
+    font-weight: 800;
+    color: var(--accent);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+  }
+  .service-dl {
+    margin: 0;
+    display: grid;
+    gap: 0.9rem;
+    font-size: 0.97rem;
+  }
+  .service-dl dt {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.2rem;
+  }
+  .service-dl dd {
+    margin: 0;
+    color: var(--ink-2);
+  }
+  .service-foot {
+    margin-top: auto;
+    padding-top: 1.1rem;
+    border-top: 1px dashed var(--line-strong);
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .service-from {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .service-from strong {
+    font-family: var(--display);
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+  }
+  .service-examples a {
+    color: var(--ink);
+  }
+  .services-note {
+    margin-top: 1.5rem;
+    max-width: 52rem;
+    font-size: 0.95rem;
+  }
+  @media (min-width: 860px) {
+    .services {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

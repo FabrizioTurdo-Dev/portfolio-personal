@@ -1,0 +1,134 @@
+---
+import { Image } from 'astro:assets';
+import type { Locale } from '../../data/types';
+import { casePath, findCase, getContent } from '../../data';
+import { caseImage } from '../images';
+import Icons from '../Icons.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = getContent(locale);
+const cs = findCase(locale, 'de-la-casa');
+const cover = cs ? caseImage(cs.slug, cs.cover) : undefined;
+---
+
+<section class="section product-section" id="producto" aria-labelledby="producto-title">
+  <div class="container product-grid">
+    <div class="product-copy">
+      <p class="eyebrow">04 · {t.product.eyebrow}</p>
+      <h2 id="producto-title">{t.product.title}</h2>
+      <p class="product-name">{t.product.name}</p>
+      <p class="product-tagline">{t.product.tagline}</p>
+      {t.product.text.map((p) => <p class="product-text">{p}</p>)}
+      <p class="product-why">
+        <strong>{t.product.whyLabel}.</strong> {t.product.why}
+      </p>
+      <div class="product-actions">
+        <a class="btn" href={t.product.primaryUrl} target="_blank" rel="noopener">{t.product.primary} <Icons name="external" /></a>
+        {cs && <a class="btn btn--ghost" href={casePath(locale, cs.slug)}>{t.product.secondary} <Icons name="arrow" /></a>}
+      </div>
+    </div>
+    <div class="product-visual reveal">
+      {
+        cover ? (
+          <Image src={cover} alt={cs?.oneLiner ?? 'De la Casa'} widths={[480, 800, 1100]} sizes="(min-width: 900px) 45vw, 100vw" loading="lazy" />
+        ) : (
+          <div class="product-placeholder" aria-hidden="true">De la Casa</div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .product-section {
+    background: var(--ink);
+    color: var(--paper);
+    border-top: 0 !important;
+  }
+  .product-section .eyebrow {
+    color: #f0a98c;
+  }
+  .product-section .eyebrow::before {
+    background: #f0a98c;
+  }
+  .product-grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .product-name {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    letter-spacing: -0.03em;
+    margin-top: 1.5rem;
+    margin-bottom: 0.25rem;
+  }
+  .product-tagline {
+    font-size: 1.15rem;
+    color: #f0a98c;
+    margin-bottom: 1.25rem;
+  }
+  .product-text {
+    color: #d9d3c4;
+    text-wrap: pretty;
+  }
+  .product-why {
+    margin-top: 1.25rem;
+    padding: 1rem 1.2rem;
+    border-left: 3px solid var(--accent);
+    background: rgb(255 255 255 / 0.05);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    color: #e8e2d3;
+    font-size: 0.98rem;
+  }
+  .product-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+  .product-section .btn {
+    background: var(--paper);
+    border-color: var(--paper);
+    color: var(--ink);
+  }
+  .product-section .btn--ghost {
+    background: transparent;
+    color: var(--paper);
+  }
+  .product-section .btn--ghost:hover {
+    background: rgb(255 255 255 / 0.08);
+  }
+  .product-visual {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    background: #23201a;
+    aspect-ratio: 4 / 3;
+  }
+  .product-visual :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+  .product-placeholder {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 2rem;
+    color: #5a554a;
+  }
+  @media (min-width: 900px) {
+    .product-grid {
+      grid-template-columns: 1.1fr 1fr;
+      gap: 4rem;
+    }
+  }
+</style>

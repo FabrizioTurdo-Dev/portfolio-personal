@@ -1,0 +1,108 @@
+---
+import type { Locale } from '../../data/types';
+import { getContent } from '../../data';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = getContent(locale);
+---
+
+<section class="section" id="proceso" aria-labelledby="proceso-title">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">03 · {t.nav.process}</p>
+      <h2 id="proceso-title">{t.process.title}</h2>
+      <p class="lede">{t.process.intro}</p>
+    </div>
+    <ol class="steps">
+      {t.process.steps.map((s, i) => (
+        <li class="step reveal" style={`--i:${i}`}>
+          <span class="step-num" aria-hidden="true">{i + 1}</span>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+    <aside class="abroad card reveal" aria-labelledby="abroad-title">
+      <h3 id="abroad-title">{t.process.abroad.title}</h3>
+      <dl class="abroad-dl">
+        {t.process.abroad.items.map((it) => (
+          <div>
+            <dt>{it.label}</dt>
+            <dd>{it.text}</dd>
+          </div>
+        ))}
+      </dl>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .steps {
+    list-style: none;
+    display: grid;
+    gap: 1.5rem;
+    counter-reset: step;
+  }
+  .step {
+    position: relative;
+    padding-top: 1rem;
+    border-top: 2px solid var(--ink);
+    transition-delay: calc(var(--i) * 90ms);
+  }
+  .step-num {
+    display: inline-block;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+    margin-bottom: 0.6rem;
+  }
+  .step h3 {
+    margin-bottom: 0.5rem;
+  }
+  .step p {
+    color: var(--ink-2);
+    font-size: 0.98rem;
+  }
+  .abroad {
+    margin-top: 3rem;
+    background: var(--paper-2);
+    box-shadow: none;
+  }
+  .abroad h3 {
+    margin-bottom: 1.25rem;
+  }
+  .abroad-dl {
+    margin: 0;
+    display: grid;
+    gap: 1.25rem;
+  }
+  .abroad-dl dt {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: 0.25rem;
+  }
+  .abroad-dl dd {
+    margin: 0;
+    color: var(--ink-2);
+    font-size: 0.97rem;
+  }
+  @media (min-width: 760px) {
+    .steps {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.75rem;
+    }
+    .abroad-dl {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,106 @@
+---
+import type { Locale } from '../../data/types';
+import { getContent } from '../../data';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = getContent(locale);
+---
+
+<section class="section" id="precios" aria-labelledby="precios-title">
+  <div class="container pricing-grid">
+    <div class="section-head pricing-head">
+      <p class="eyebrow">05 · {t.nav.pricing}</p>
+      <h2 id="precios-title">{t.pricing.title}</h2>
+      <p class="lede">{t.pricing.intro}</p>
+      <ul class="pricing-notes">
+        {t.pricing.notes.map((n) => <li>{n}</li>)}
+      </ul>
+    </div>
+    <table class="pricing reveal">
+      <tbody>
+        {t.pricing.rows.map((r) => (
+          <tr>
+            <th scope="row">{r.what}</th>
+            <td>{r.from}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<style>
+  .pricing-grid {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+  .pricing-head {
+    margin-bottom: 0;
+  }
+  .pricing-notes {
+    list-style: none;
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .pricing-notes li::before {
+    content: '— ';
+  }
+  .pricing {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .pricing tr + tr {
+    border-top: 1px solid var(--line);
+  }
+  .pricing th,
+  .pricing td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  .pricing th {
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+  .pricing td {
+    font-family: var(--display);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    text-align: right;
+  }
+  @media (min-width: 900px) {
+    .pricing-grid {
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+    }
+  }
+  @media (max-width: 520px) {
+    .pricing th,
+    .pricing td {
+      display: block;
+      padding: 0.6rem 1rem;
+    }
+    .pricing th {
+      padding-top: 1rem;
+      padding-bottom: 0;
+    }
+    .pricing td {
+      text-align: left;
+      padding-bottom: 1rem;
+      white-space: normal;
+    }
+  }
+</style>
