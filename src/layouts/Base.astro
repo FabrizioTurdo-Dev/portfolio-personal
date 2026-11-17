@@ -81,7 +81,26 @@ const ogLocale = locale === 'es' ? 'es_AR' : 'en_US';
               dataLayer.push(arguments);
             }
             gtag('js', new Date());
-            gtag('config', GA_ID, { anonymize_ip: true });
+            gtag('config', GA_ID);
+            // Clics de contacto: WhatsApp, agenda y mail (se marcan como eventos clave en GA).
+            document.addEventListener('click', function (e) {
+              var a = e.target instanceof Element ? e.target.closest('a[href]') : null;
+              if (!a) return;
+              var href = a.getAttribute('href') || '';
+              var name = /wa\.me|whatsapp/.test(href)
+                ? 'whatsapp_click'
+                : /calendar\.app\.google|calendar\.google|cal\.com|calendly/.test(href)
+                  ? 'calendar_click'
+                  : href.indexOf('mailto:') === 0
+                    ? 'email_click'
+                    : null;
+              if (!name) return;
+              var section = a.closest('section[id], header, footer, aside');
+              gtag('event', name, {
+                link_text: (a.textContent || '').trim().slice(0, 80),
+                link_location: section ? section.id || section.tagName.toLowerCase() : 'page',
+              });
+            });
           </script>
         </>
       )

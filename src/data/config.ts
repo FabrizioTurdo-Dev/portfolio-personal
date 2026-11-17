@@ -18,7 +18,7 @@ export const CONTACT = {
 };
 
 /** ID de Google Analytics 4 (G-XXXXXXX). Vacío = no se carga nada. */
-export const GA_ID = '';
+export const GA_ID = 'G-W30GRE25EL';
 
 export const SITE_URL = 'https://fabrizioturdo.com';
 
