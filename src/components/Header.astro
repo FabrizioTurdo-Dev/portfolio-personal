@@ -2,6 +2,8 @@
 import type { Locale } from '../data/types';
 import { getContent, homePath, otherLocale } from '../data';
 import { CONTACT, whatsappUrl } from '../data/config';
+import { Image } from 'astro:assets';
+import photo from '../assets/fabrizio.png';
 
 interface Props {
   locale: Locale;
@@ -24,7 +26,10 @@ const ctaHref = CONTACT.calendarUrl || whatsappUrl(t.contact.calendar.fallbackMe
 <header class="site-header" id="site-header">
   <div class="container header-inner">
     <a class="brand" href={home} aria-label="Fabrizio Turdo">
-      <span class="brand-mark" aria-hidden="true">FT</span>
+      <span class="brand-mark" aria-hidden="true">
+        <span class="brand-initials">FT</span>
+        <Image class="brand-photo" src={photo} alt="" width={120} height={120} loading="eager" />
+      </span>
       <span class="brand-text">
         <span class="brand-name">Fabrizio Turdo</span>
         <span class="brand-sub">Software & Web Studio</span>
@@ -102,6 +107,28 @@ const ctaHref = CONTACT.calendarUrl || whatsappUrl(t.contact.calendar.fallbackMe
     font-size: 1rem;
     letter-spacing: -0.03em;
     box-shadow: 0 0 18px -4px var(--glow);
+    overflow: hidden;
+  }
+  .brand-photo {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  @media (max-width: 860px) {
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--surface);
+    }
+    .brand-initials {
+      display: none;
+    }
+    .brand-photo {
+      display: block;
+    }
   }
   .brand-text {
     display: flex;
