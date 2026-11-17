@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import type { CaseStudy, Locale } from '../data/types';
 import { casePath, getContent, homePath, otherLocale } from '../data';
 import { caseImage } from './images';
-import { whatsappUrl } from '../data/config';
+import { SITE_URL, whatsappUrl } from '../data/config';
 import { Image } from 'astro:assets';
 import CaseCard from './CaseCard.astro';
 import Icons from './Icons.astro';
@@ -18,19 +18,43 @@ const other = otherLocale(locale);
 const home = homePath(locale);
 const cover = caseImage(item.slug, item.cover);
 const others = t.cases.filter((c) => c.slug !== item.slug).slice(0, 3);
-const title = `${item.title} · Fabrizio Turdo`;
+// Títulos largos sin la marca al final, para que Google no los corte a la mitad.
+const title = item.title.length > 62 ? item.title : `${item.title} · Fabrizio Turdo`;
 const ogImage = item.cover ? `/og/${item.slug}.png` : '/og.png';
+const url = `${SITE_URL}${casePath(locale, item.slug)}`;
+const description =
+  locale === 'es'
+    ? `${item.oneLiner} Caso de estudio: ${item.name}, ${item.kind}.`
+    : `${item.oneLiner} Case study: ${item.name}, ${item.kind}.`;
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'CreativeWork',
-  name: item.title,
-  description: item.oneLiner,
-  author: { '@type': 'Person', name: 'Fabrizio Turdo' },
-  url: `https://fabrizioturdo.com${casePath(locale, item.slug)}`,
+  '@graph': [
+    {
+      '@type': 'CreativeWork',
+      '@id': `${url}#work`,
+      name: item.title,
+      headline: item.title,
+      description: item.oneLiner,
+      inLanguage: locale === 'es' ? 'es-AR' : 'en',
+      image: `${SITE_URL}${ogImage}`,
+      url,
+      author: { '@type': 'Person', '@id': `${SITE_URL}/#person`, name: 'Fabrizio Turdo', url: `${SITE_URL}${home}` },
+      about: item.name,
+      keywords: item.stack,
+      ...(item.links[0] ? { sameAs: item.links[0].url } : {}),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Fabrizio Turdo', item: `${SITE_URL}${home}` },
+        { '@type': 'ListItem', position: 2, name: item.name, item: url },
+      ],
+    },
+  ],
 };
 ---
 
-<Base locale={locale} title={title} description={item.oneLiner} path={casePath(locale, item.slug)} altPath={casePath(other, item.slug)} ogType="article" ogImage={ogImage} jsonLd={jsonLd}>
+<Base locale={locale} title={title} description={description} path={casePath(locale, item.slug)} altPath={casePath(other, item.slug)} ogType="article" ogImage={ogImage} jsonLd={jsonLd}>
   <article class="case">
     <header class="case-hero">
       <div class="container">

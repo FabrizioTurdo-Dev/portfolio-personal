@@ -6,7 +6,7 @@ export const es: SiteContent = {
   meta: {
     title: 'Fabrizio Turdo · Software y webs a medida para tu negocio',
     description:
-      'Desarrollador en Buenos Aires. Webs, catálogos con pedidos por WhatsApp, turnos y sistemas a medida, por etapas y con trato directo. Clientes en Argentina y el exterior.',
+      'Desarrollador en Buenos Aires: webs, catálogos con pedidos por WhatsApp, turnos y sistemas a medida para negocios. Por etapas y con trato directo.',
     ogAlt: 'Fabrizio Turdo · Software & Web Studio',
   },
   nav: {

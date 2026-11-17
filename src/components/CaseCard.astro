@@ -19,7 +19,7 @@ const href = casePath(locale, item.slug);
   <a class="case-cover" href={href} aria-label={item.name} tabindex="-1">
     {
       cover ? (
-        <Image src={cover} alt="" widths={[320, 640, 960]} sizes="(min-width: 1000px) 33vw, (min-width: 760px) 50vw, 120px" loading="lazy" />
+        <Image src={cover} alt={`${item.name}: ${item.oneLiner}`} widths={[320, 640, 960]} sizes="(min-width: 1000px) 33vw, (min-width: 760px) 50vw, 120px" loading="lazy" />
       ) : (
         <div class="case-placeholder" aria-hidden="true">{item.name}</div>
       )

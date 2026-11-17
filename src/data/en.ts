@@ -6,7 +6,7 @@ export const en: SiteContent = {
   meta: {
     title: 'Fabrizio Turdo · Custom software and websites for your business',
     description:
-      'Developer based in Buenos Aires. Websites, catalogs with WhatsApp ordering, booking systems and custom software, delivered in stages and working directly with you. Clients in Argentina and abroad.',
+      'Buenos Aires developer building websites, WhatsApp ordering catalogs, booking systems and custom software for businesses. In stages, working directly with you.',
     ogAlt: 'Fabrizio Turdo · Software & Web Studio',
   },
   nav: {

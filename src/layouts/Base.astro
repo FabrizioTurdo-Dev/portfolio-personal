@@ -17,9 +17,11 @@ interface Props {
   ogImage?: string;
   ogType?: 'website' | 'article';
   jsonLd?: Record<string, unknown>;
+  /** Páginas que no deben aparecer en Google (por ejemplo la 404) */
+  noindex?: boolean;
 }
 
-const { locale, title, description, altPath, path, ogImage = '/og.png', ogType = 'website', jsonLd } = Astro.props;
+const { locale, title, description, altPath, path, ogImage = '/og.png', ogType = 'website', jsonLd, noindex = false } = Astro.props;
 const t = getContent(locale);
 const other = otherLocale(locale);
 const canonical = `${SITE_URL}${path}`;
@@ -33,10 +35,18 @@ const ogLocale = locale === 'es' ? 'es_AR' : 'en_US';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang={locale === 'es' ? 'es' : 'en'} href={canonical} />
-    <link rel="alternate" hreflang={other === 'es' ? 'es' : 'en'} href={`${SITE_URL}${altPath}`} />
-    <link rel="alternate" hreflang="x-default" href={`${SITE_URL}/es`} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    {
+      !noindex && (
+        <>
+          <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+          <link rel="canonical" href={canonical} />
+          <link rel="alternate" hreflang={locale} href={canonical} />
+          <link rel="alternate" hreflang={other} href={`${SITE_URL}${altPath}`} />
+          <link rel="alternate" hreflang="x-default" href={`${SITE_URL}${locale === 'es' ? path : altPath}`} />
+        </>
+      )
+    }
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300;400;500;600;700&family=Doto:wght@100..900&display=swap" rel="stylesheet" />
@@ -55,6 +65,7 @@ const ogLocale = locale === 'es' ? 'es_AR' : 'en_US';
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={t.meta.ogAlt} />
     <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={locale === 'es' ? 'en_US' : 'es_AR'} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
