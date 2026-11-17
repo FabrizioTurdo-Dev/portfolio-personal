@@ -12,11 +12,10 @@ const t = getContent(locale);
 const home = homePath(locale);
 const other = otherLocale(locale);
 const links = [
-  { href: `${home}#trabajos`, label: t.nav.work },
-  { href: `${home}#servicios`, label: t.nav.services },
-  { href: `${home}#proceso`, label: t.nav.process },
-  { href: `${home}#precios`, label: t.nav.pricing },
   { href: `${home}#sobre-mi`, label: t.nav.about },
+  { href: `${home}#servicios`, label: t.nav.services },
+  { href: `${home}#trabajos`, label: t.nav.work },
+  { href: `${home}#proceso`, label: t.nav.process },
   { href: `${home}#faq`, label: t.nav.faq },
 ];
 const ctaHref = CONTACT.calendarUrl || whatsappUrl(t.contact.calendar.fallbackMessage);

@@ -58,7 +58,7 @@ export const en: SiteContent = {
         solves: 'Your customer builds the order or picks the slot on their own. You receive it clean and organized, and you update prices and stock from your phone.',
         includes: 'Everything in the professional website, plus a catalog or booking calendar, a cart that sends the order via WhatsApp, and a panel to edit products, prices or availability.',
         from: 'USD 2,000',
-        examples: ['chitopo', 'vexa', 'mantillo-del-bosque', 'viogua'],
+        examples: ['chitopo', 'alma-dekh', 'vexa', 'mantillo-del-bosque'],
       },
       {
         id: 'system',
@@ -67,11 +67,11 @@ export const en: SiteContent = {
         solves: 'Your own system with users, roles and real-time data, used from a phone like an app.',
         includes: 'Discovery, screen design, database, management panel, analytics and launch. We start with a first version that already works and grow it in stages.',
         from: 'USD 3,500',
-        examples: ['alma-dekh', 'de-la-casa'],
+        examples: ['viogua'],
       },
     ],
     footnote:
-      'After launch you can add a monthly maintenance plan (hosting, backups and bug fixes) from USD 60/month, and new features in stages whenever you need them.',
+      'Prices are indicative and exclude taxes: every proposal is tailored, with a deposit upfront and the rest paid per stage. After launch you can add a monthly maintenance plan (hosting, backups and bug fixes) from USD 60/month, and new features in stages from USD 600.',
   },
   work: {
     title: 'Live projects, in daily use',
@@ -276,7 +276,7 @@ export const en: SiteContent = {
       slug: 'alma-dekh',
       name: 'Alma Dekh',
       kind: 'Restaurant · Buenos Aires',
-      service: 'system',
+      service: 'catalog',
       title: 'Website, digital menu with ordering and management panel for a restaurant',
       oneLiner: "The menu lives on the customer's phone, orders hit the panel instantly, and the owner edits everything without touching code.",
       problem: ['Alma Dekh is a restaurant, café and tea house in Ingeniero Maschwitz, Buenos Aires.'],
@@ -364,7 +364,7 @@ export const en: SiteContent = {
       slug: 'viogua',
       name: 'VioGua',
       kind: 'Interior design · Buenos Aires',
-      service: 'catalog',
+      service: 'system',
       title: 'Video-call bookings and a style quiz for an interior design studio',
       oneLiner: 'Visitors pick a day and time, upload photos of their rooms, take a 4-step quiz and get a moodboard. The studio manages bookings from its own panel.',
       problem: [

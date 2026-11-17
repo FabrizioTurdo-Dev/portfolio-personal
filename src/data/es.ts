@@ -58,7 +58,7 @@ export const es: SiteContent = {
         solves: 'El cliente arma el pedido o elige el turno solo. A vos te llega ordenado, y los precios y el stock los cambiás desde tu celular.',
         includes: 'Todo lo de la web profesional más catálogo o agenda, carrito con pedido por WhatsApp, y un panel para editar productos, precios o disponibilidad.',
         from: 'USD 2.000 · ARS 2.400.000',
-        examples: ['chitopo', 'vexa', 'mantillo-del-bosque', 'viogua'],
+        examples: ['chitopo', 'alma-dekh', 'vexa', 'mantillo-del-bosque'],
       },
       {
         id: 'system',
@@ -67,11 +67,11 @@ export const es: SiteContent = {
         solves: 'Un sistema propio con usuarios, roles y datos en tiempo real, que se usa desde el celular como una app.',
         includes: 'Relevamiento, diseño de las pantallas, base de datos, panel de gestión, estadísticas y puesta en marcha. Arrancamos por una primera versión que ya funciona y crece por etapas.',
         from: 'USD 3.500 · ARS 4.200.000',
-        examples: ['alma-dekh', 'de-la-casa'],
+        examples: ['viogua'],
       },
     ],
     footnote:
-      'Después de la entrega podés contratar mantenimiento mensual (hosting, copias de seguridad y arreglo de errores) desde USD 60 al mes, y sumar funcionalidades nuevas por etapas.',
+      'Los precios son orientativos y sin IVA: cada propuesta se arma a medida y se paga un adelanto más el resto por etapas. Después de la entrega podés sumar mantenimiento mensual (hosting, copias de seguridad y arreglo de errores) desde USD 60 al mes, y funcionalidades nuevas por etapas desde USD 600.',
   },
   work: {
     title: 'Trabajos publicados y en uso',
@@ -280,7 +280,7 @@ export const es: SiteContent = {
       slug: 'alma-dekh',
       name: 'Alma Dekh',
       kind: 'Restaurante · Buenos Aires',
-      service: 'system',
+      service: 'catalog',
       title: 'Web, carta digital con pedidos y panel de gestión para un restaurante',
       oneLiner: 'La carta vive en el celular del cliente, el pedido entra al panel al instante y el dueño edita todo sin tocar código.',
       problem: ['Alma Dekh es un restaurante, café y casa de té en Ingeniero Maschwitz, Buenos Aires.'],
@@ -370,7 +370,7 @@ export const es: SiteContent = {
       slug: 'viogua',
       name: 'VioGua',
       kind: 'Diseño de interiores · Buenos Aires',
-      service: 'catalog',
+      service: 'system',
       title: 'Turnos por videollamada y test de estilo para un estudio de diseño de interiores',
       oneLiner: 'La persona elige día y horario, sube fotos de sus ambientes, hace un test de 4 pasos y recibe un moodboard. El estudio gestiona los turnos desde su panel.',
       problem: [

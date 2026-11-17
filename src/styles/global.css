@@ -112,8 +112,12 @@ h3 {
 }
 
 /* Palabra destacada: itálica serif con luz ámbar */
+h1 em {
+  font-style: italic;
+  font-weight: 400;
+}
+
 .lit,
-h1 em,
 h2 em {
   font-style: italic;
   font-weight: 400;

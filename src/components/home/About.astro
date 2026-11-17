@@ -1,27 +1,24 @@
 ---
-import { Image } from 'astro:assets';
 import type { Locale } from '../../data/types';
 import { getContent } from '../../data';
-import photo from '../../assets/fabrizio.png';
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
 const t = getContent(locale);
+const [first, ...rest] = t.about.paragraphs;
 ---
 
-<section class="section" id="sobre-mi" aria-labelledby="sobre-title">
+<section class="section about" id="sobre-mi" aria-labelledby="sobre-title">
   <div class="container about-grid">
-    <div class="about-photo reveal only-desktop">
-      <Image src={photo} alt={t.about.photoAlt} width={300} widths={[300, 600]} sizes="(min-width: 900px) 260px, 0px" loading="lazy" />
-    </div>
-    <div class="about-copy">
-      <p class="eyebrow">06 · {t.nav.about}</p>
+    <div class="about-head">
+      <p class="eyebrow">01 · {t.nav.about}</p>
       <h2 id="sobre-title">{t.about.title}</h2>
-      <div class="about-text">
-        {t.about.paragraphs.map((p) => <p>{p}</p>)}
-      </div>
+    </div>
+    <div class="about-text">
+      <p class="about-first">{first}</p>
+      {rest.map((p) => <p>{p}</p>)}
     </div>
   </div>
 </section>
@@ -29,51 +26,31 @@ const t = getContent(locale);
 <style>
   .about-grid {
     display: grid;
-    gap: 2rem;
+    gap: 1.25rem;
     align-items: start;
   }
-  .about-photo {
-    width: min(100%, 260px);
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--line-strong);
-    box-shadow: var(--shadow);
-    aspect-ratio: 4 / 5;
-    background: var(--surface);
-  }
-  .about-photo :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: saturate(0.92);
-  }
   .about-text {
-    margin-top: 1.25rem;
     display: grid;
     gap: 0.9rem;
-    max-width: 42rem;
+    max-width: 44rem;
     color: var(--ink-2);
     text-wrap: pretty;
     font-size: 0.98rem;
   }
-  .about-text p:first-child {
+  .about-first {
     color: var(--ink);
   }
   @media (min-width: 760px) {
-    .about-text p:first-child {
+    .about-first {
       font-family: var(--display);
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       line-height: 1.4;
     }
   }
   @media (min-width: 900px) {
     .about-grid {
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 1fr 2fr;
       gap: 4rem;
-    }
-    .about-photo {
-      position: sticky;
-      top: 96px;
     }
   }
 </style>
