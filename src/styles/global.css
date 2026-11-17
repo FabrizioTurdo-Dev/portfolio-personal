@@ -102,13 +102,23 @@ h1 {
   letter-spacing: -0.02em;
 }
 
+/* Subtítulos: Cormorant Upright en todo el sitio */
+h2,
+h3 {
+  font-family: 'Cormorant Upright', var(--display);
+  font-weight: 600;
+  letter-spacing: 0;
+  font-variation-settings: normal;
+}
+
 h2 {
-  font-size: clamp(1.8rem, 3.6vw, 2.7rem);
+  font-size: clamp(2.3rem, 4.6vw, 3.5rem);
+  line-height: 1.02;
 }
 
 h3 {
-  font-size: clamp(1.2rem, 1.8vw, 1.45rem);
-  font-weight: 500;
+  font-size: clamp(1.5rem, 2.2vw, 1.85rem);
+  line-height: 1.1;
 }
 
 /* Palabra destacada: itálica serif con luz ámbar */
@@ -122,13 +132,7 @@ h1 em {
   line-height: 1.12;
 }
 
-/* Título de servicios: Cormorant Upright */
-.font-cormorant {
-  font-family: 'Cormorant Upright', var(--display);
-  font-weight: 600;
-  font-size: clamp(2.3rem, 4.6vw, 3.5rem);
-  letter-spacing: 0;
-}
+
 
 .lit,
 h2 em {
